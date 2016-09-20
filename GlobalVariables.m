@@ -1,5 +1,13 @@
 % Global variables
 
+global UNKNOWN;
+UNKNOWN = -2;
+
+% When using playback from a data log, you sometimes want to start mapping
+% several steps in from the beginning of the file
+global START_ITERATION;
+START_ITERATION = 0;
+
 % We need to know, for various purposes, how big our map is allowed to be
 global MAP_WIDTH MAP_HEIGHT;
 MAP_WIDTH = 1700;
@@ -63,8 +71,8 @@ global PASSES;
 PASSES = 9;
 
 % Maximum error we will allow for a trace in grid squares. Basically, this
-% is the level of of "background noise", or the base chance that something 
-% weird and completely random happened with the sensor, not conforming to 
+% is the level of of "background noise", or the base chance that something
+% weird and completely random happened with the sensor, not conforming to
 % our observation model.
 global MAX_TRACE_ERROR;
 MAX_TRACE_ERROR = exp(-24.0/LOW_VARIANCE);
@@ -77,13 +85,13 @@ global LOG REC;
 LOG = 0;
 REC = 1;
 
-% The number of sensor readings for this robot (typically 181 for a laser 
+% The number of sensor readings for this robot (typically 181 for a laser
 % range finder)
 global SENSE_NUMBER;
 SENSE_NUMBER = 180;
-% Turn radius of the robot in map squares. Since the "robot" is actually the 
-% sensor origin for the purposes of this program, the turn radius is the 
-% displacement of the sensor from the robot's center of rotation (assuming 
+% Turn radius of the robot in map squares. Since the "robot" is actually the
+% sensor origin for the purposes of this program, the turn radius is the
+% displacement of the sensor from the robot's center of rotation (assuming
 % holonomic turns)
 global TURN_RADIUS;
 TURN_RADIUS = (0.40 * MAP_SCALE);
@@ -95,3 +103,41 @@ THold = struct('C',0,'D',0,'T',0,'sense',Tsense);
 global TOdo odometry;
 TOdo = struct('x',0,'y',0,'theta',0);
 odometry = TOdo;
+
+% The maps are each made up of dynamic arrays of MapNodes.
+% Each entry maintains the total distance observed through this square
+% (distance), and corresponding number of scans which were observed to stop
+% here (hits). We also keep track of the ancestor particle which made the
+% observation (ID), as well as the generation of the ancestor's observation
+% this is a modification of, if any (parentGen). We also keep an index into
+% the array of modified grid squares maintained by the ancestor particle
+% which made the observation which corresponding to this update (source).
+
+global MapNode_struct PMapNode TMapNode;
+MapNode_struct = struct('source',0,'distance',0,'hits',0,'ID',0,'parentGen',0);
+PMapNode = MapNode_struct;
+TMapNode = MapNode_struct;
+
+global MapNodeStarter_struct TMapStarter PMapStarter;
+MapNodeStarter_struct = struct('total',0,'size',0,'dead',0,'array',PMapNode);
+TMapStarter = MapNodeStarter_struct;
+PMapStarter = MapNodeStarter_struct;
+
+global TEntryList_struct TEntryList;
+TEntryList_struct = struct('node',0,'x',0,'y',0);
+TEntryList = TEntryList_struct;
+
+global TPath_struct TPath,
+TPath_struct = struct('C',0,'D',0,'T',0,'next',TPath_struct);
+TPath = TPath_struct;
+
+global TAncestor_struct;
+TAncestor_struct = struct('parent',TAncestor_struct,'mapEntries',TEntryList,...
+    'size',0,'total',0,'generation',0,'ID',0,'numChildren',0,'path',TPath);
+
+global TSample_struct TSample newSample;
+TSample_struct = struct('x',0,'y',0,'theta',0,'C',0,'D',0,'T',0,...
+    'probability',0,'parent',0);
+TSample = TSample_struct;
+newSample = TSample_struct;
+newSample(PARTICLE_NUMBER).C = []; % Initializes a set of new samples 
