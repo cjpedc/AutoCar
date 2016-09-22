@@ -138,12 +138,11 @@ TPath = TPath_struct;
 % -Each iteration of the particle filter involves resampling from the previous
 % generation of particles.
 % The new particle is the child, and old particle is the parent. 
-% -numChildren keeps track of the number of particles in the tree that claim
-% this particle as their parent(we don't need to know explicitly who they are). 
-% -parent points to the particle in the tree that is supposedly the parent of
-% this particle. However, due to the collapsing of non-branching paths in 
-% the tree (see UpdateAncestry in low.c), the actual particle pointed to is
-% the most recent ancestor of this particle that is shared by at least
+% -numChildren keeps track of the number of particles in the tree that claim this particle as their parent
+% (we don't need to know explicitly who they are). 
+% -parent points to the particle in the tree that is supposedly the parent of this particle. 
+% However, due to the collapsing of non-branching paths in the tree (see UpdateAncestry in low.c),
+% the actual particle pointed to is the most recent ancestor of this particle that is shared by at least
 % one other surviving particle.
 global TAncestor_struct;
 TAncestor_struct = struct('parent',TAncestor_struct,'mapEntries',TEntryList,...

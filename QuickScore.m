@@ -9,10 +9,6 @@ function [inline] = QuickScore(sense, index, sampleNum)
 
 distance = 0;
 eval = 0;
-MAP_SCALE = 35;
-LOW_VARIANCE = 0.017 * MAP_SCALE*MAP_SCALE;
-MAX_SENSE_RANGE = 7.95 * MAP_SCALE;
-MAX_TRACE_ERROR = exp(-24.0/LOW_VARIANCE);
 
 if (sense(index).distance >= MAX_SENSE_RANGE)
     inline = 1; % return 1/True
