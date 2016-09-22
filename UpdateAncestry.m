@@ -28,13 +28,13 @@ function [] = UpdateAncestry(sense, particleID)
 % samples, but those samples may not have become particles themselves,
 % through not generating any samples for the next generation. Recurse up
 % through there.
-for i = 0 : l_cur_particles_used
+for i = 1 : l_cur_particles_used
     temp = l_particle(i).ancestryNode;
     
     % This is a "while" loop for purposes of recursing up the tree.
     while (temp.numChildren == 0) % temp->numChildren
         % Free up the memory in the map by deleting the associated observations.
-        for j = 0 : temp.total % temp->total
+        for j = 1 : temp.total % temp->total
             % LowDeleteObservation(temp->mapEntries[j].x, temp->mapEntries[j].y, temp->mapEntries[j].node);
             LowDeleteObservation(temp.mapEntries(j).x, temp.mapEntries(j).y,...
                 temp.mapEntries(j).node);
@@ -81,7 +81,7 @@ end
 % of the parent. This collapses those ancestor nodes which have a branching
 % factor of only one.
 
-for i = 0 : ID_NUMBER-1
+for i = 1 : ID_NUMBER
     % These booleans mean (in order) that the ID is in use, it has a parent
     % (ie is not the root of the ancestry tree), and that its parent has only
     % one child (which is necessarily this ID)
@@ -110,7 +110,7 @@ for i = 0 : ID_NUMBER-1
             workArray = [];
             %if (workArray == NULL) fprintf(stderr, "Malloc failed for workArray\n");
             
-            for j = 0 : parentNode.total % parentNode->total
+            for j = 1 : parentNode.total % parentNode->total
                 workArray(j).x = parentNode.mapEntries(j).x; % parentNode->mapEntries[j].x
                 workArray(j).y = parentNode.mapEntries(j).y; % parentNode->mapEntries[j].y
                 workArray(j).node = parentNode.mapEntries(j).node; %parentNode->mapEntries[j].node
@@ -132,7 +132,7 @@ for i = 0 : ID_NUMBER-1
         % number of "dead", below the threshold, shrink the array (which cleans up
         % the dead)
         entry = particleID(i).mapEntries;
-        for j = 0 : particleID(i).total
+        for j = 1 : particleID(i).total
             node = lowMap(entry(j).x, entry(j).y);
             
             % Change the ID
@@ -164,7 +164,7 @@ for i = 0 : ID_NUMBER-1
         % update for a given grid square which uses the child's ID (as a consequence
         % of an earlier collapse), then we want to make certain that the resizing
         % doesn't take place until after all entries have changed their ID appropriately.
-        for j = 0 : particleID(i).total
+        for j = 1 : particleID(i).total
             node = lowMap(entry(j).x,entry(j).y);
             % ((node->total - node->dead)*2.5 < node->size)
             if ((node.total - node.dead)*2.5 < node.size)
@@ -199,7 +199,7 @@ end
 
 % This is the step where we correct for redirections that arise from the
 % collapse of a branch of the ancestry tree
-for i = 0 : ID_NUMBER-1
+for i = 1 : ID_NUMBER
     if (particleID(i).ID == i)
         while (particleID(i).parent.generation == -111) % particleID(i).parent->generation
             particleID(i).parent = particleID(i).parent.parent; % particleID(i).parent->parent;

@@ -6,7 +6,7 @@ function [] = DisposeAncestry(particleID)
 % TPath *tempPath, *trashPath;
 % TEntryList *entry;
 
-for i = 0 : ID_NUMBER
+for i = 1 : ID_NUMBER
     if (particleID(i).ID == i)
         % Free up memory
         entry = particleID(i).mapEntries;
@@ -27,7 +27,7 @@ for i = 0 : ID_NUMBER
         particleID(i).ID = -123;
     end
     
-    for cleanID = 0 : ID_NUMBER
+    for cleanID = 1 : ID_NUMBER
         availableID(cleanID) = cleanID;
     end
     cleanID = ID_NUMBER;

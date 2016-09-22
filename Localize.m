@@ -65,10 +65,10 @@ TCoeff = max((abs(distance*varT_D) + abs(turn*varT_T)), 0.10);
 i = 0;
 % Iterate through each of the old particles, to see how many times it got
 % resampled.
-for j = 0 : PARTICLE_NUMBER
+for j = 1 : PARTICLE_NUMBER
     % Now create a new sample for each time this particle got resampled
     % (possibly 0)
-    for k = 0 : children(j)
+    for k = 1 : children(j)
         % We make a sample entry. The first, most important value is which
         % of the old particles is this new sample's parent. This defines
         % which map is being inherited, which will be used during localization
@@ -127,7 +127,7 @@ end
 % probability when the entire laser trace is considered.
 
 threshold = WORST_POSSIBLE-1; % ensures that we accept anything in 1st round
-for p = 0 : PASSES
+for p = 1 : PASSES
     best = 0;
     for i = i : SAMPLE_NUMBER
         if (newSample(i).probability >= threshold)
@@ -146,7 +146,7 @@ for p = 0 : PASSES
 end
 
 keepers = 0;
-for i = 0 : SAMPLE_NUMBER
+for i = 1 : SAMPLE_NUMBER
     if (newSample(i).probability >= threshold)
         keepers = keepers + 1;
         % Don't let this heuristic evaluation be included in the final eval.
@@ -165,9 +165,9 @@ threshold = -1;
 % While doing this evaluation, we can still keep our eye out for unlikely
 % samples before we are finished.
 keepers = 0;
-for p = 0 : PASSES
+for p = 1 : PASSES
     best = 0;
-    for i = 0 : SAMPLE_NUMBER
+    for i = 1 : SAMPLE_NUMBER
         if (newSample(i).probability >= threshold)
             if (p == PASSES -1)
                 keepers = keepers + 1;
@@ -197,7 +197,7 @@ sprintf('Best of %d', keepers);
 
 total = 0.0;
 threshold = newSample(best).probability;
-for i = 0 : SAMPLE_NUMBER
+for i = 1 : SAMPLE_NUMBER
     % If the sample was culled, it has a weight of 0
     if (newSample(i).probability == WORST_POSSIBLE)
         newSample(i).probability = 0.0;
@@ -208,14 +208,14 @@ for i = 0 : SAMPLE_NUMBER
 end
 
 % Renormalize to ensure that the total probability is now equal to 1.
-for i = 0 : SAMPLE_NUMBER
+for i = 1 : SAMPLE_NUMBER
     newSample(i).probability = newSample(i).probability/total;
 end
 
 total = 0.0;
 % Count how many children each particle will get in next generation
 % This is done through random resampling.
-for i = 0 : SAMPLE_NUMBER
+for i = 1 : SAMPLE_NUMBER
     newchildren(i) = 0;
     total = total + newSample(i).probability;
 end
@@ -241,7 +241,7 @@ sprintf('(%d kept)', i);
 
 % Do some cleaning up
 % Is this even necessary?
-for i = 0 : PARTICLE_NUMBER
+for i = 1 : PARTICLE_NUMBER
     children(i) = 0;
     savedParticle(i).probability = 0.0;
 end
@@ -249,7 +249,7 @@ end
 % Now copy over new particles to savedParticles
 best = 0;
 k = 0; % pointer into saved particles
-for i = 0 : SAMPLE_NUMBER
+for i = 1 : SAMPLE_NUMBER
     if (newchildren(i) > 0) {
         savedParticle(k).probability = newSample(i).probability;
         savedParticle(k).x = newSample(i).x;
@@ -283,14 +283,14 @@ cur_saved_particles_used = k;
 if (j < SAMPLE_NUMBER)
     total = 0.0;
     % Normalize particle probabilities. Note that they have already been exponentiated
-    for i = 0 : cur_saved_particles_used
+    for i = 1 : cur_saved_particles_used
         total = total + savedParticle(i).probability;
     end
-    for i = 0 : cur_saved_particles_used
+    for i = 1 : cur_saved_particles_used
         savedParticle(i).probability = savedParticle(i).probability/total;
     end
     total = 0.0;
-    for i = 0 : cur_saved_particles_used
+    for i = 1 : cur_saved_particles_used
         total = total + savedParticle(i).probability;
     end
     

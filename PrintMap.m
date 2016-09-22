@@ -22,8 +22,8 @@ lasty = 0;
 startx = width-1;
 starty = height-1;
 
-for x = 0 : width
-    for y = 0 : height
+for x = 1 : width
+    for y = 1 : height
         
         % The density of each grid square is reported, assuming a full diagonaly
         % traversal of the square. This gives good contrast.
@@ -57,7 +57,7 @@ end
 % If the command was given to print out the set of particles on the map,
 % that's done here.
 if (particles)
-    for i = 0 : l_cur_particles_used
+    for i = 1 : l_cur_particles_used
         if ((l_particle(i).x > 0) && (l_particle(i).x < MAP_WIDTH) && ...
                 (l_particle(i).y > 0) && (l_particle(i).y < MAP_HEIGHT))
             map(uint16(l_particle(i).x), uint16(l_particle(i).y)) = 254;
